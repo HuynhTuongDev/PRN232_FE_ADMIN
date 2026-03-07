@@ -44,9 +44,13 @@ export function isLoggedIn(): boolean {
 async function apiRequest(endpoint: string, options: RequestInit = {}): Promise<any> {
     const token = getAccessToken();
     const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
         ...((options.headers as Record<string, string>) || {}),
     };
+
+    // Only set Content-Type to application/json if body is not FormData
+    if (!(options.body instanceof FormData)) {
+        headers['Content-Type'] = 'application/json';
+    }
 
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
