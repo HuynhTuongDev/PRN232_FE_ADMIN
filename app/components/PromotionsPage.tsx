@@ -35,6 +35,7 @@ export default function PromotionsPage({ onToast }: PromotionsPageProps) {
     const [form, setForm] = useState<PromoForm>(emptyForm);
     const [saving, setSaving] = useState(false);
     const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const loadPromotions = async () => {
         setLoading(true);
@@ -55,6 +56,7 @@ export default function PromotionsPage({ onToast }: PromotionsPageProps) {
     const openCreate = () => {
         setEditingId(null);
         setForm(emptyForm);
+        setSelectedFile(null);
         setShowModal(true);
     };
 
@@ -69,6 +71,7 @@ export default function PromotionsPage({ onToast }: PromotionsPageProps) {
             startDate: promo.startDate ? new Date(promo.startDate).toISOString().split('T')[0] : '',
             endDate: promo.endDate ? new Date(promo.endDate).toISOString().split('T')[0] : '',
         });
+        setSelectedFile(null);
         setShowModal(true);
     };
 
@@ -79,21 +82,24 @@ export default function PromotionsPage({ onToast }: PromotionsPageProps) {
         }
         setSaving(true);
         try {
-            const payload: any = {
-                title: form.title,
-                description: form.description,
-                image: form.image,
-                badge: form.badge || undefined,
-                isActive: form.isActive,
-                startDate: form.startDate ? new Date(form.startDate).toISOString() : undefined,
-                endDate: form.endDate ? new Date(form.endDate).toISOString() : undefined,
-            };
+            const formData = new FormData();
+            formData.append('title', form.title);
+            formData.append('description', form.description);
+            if (form.image) formData.append('image', form.image);
+            if (form.badge) formData.append('badge', form.badge);
+            formData.append('isActive', form.isActive.toString());
+            if (form.startDate) formData.append('startDate', new Date(form.startDate).toISOString());
+            if (form.endDate) formData.append('endDate', new Date(form.endDate).toISOString());
+
+            if (selectedFile) {
+                formData.append('file', selectedFile);
+            }
 
             let res;
             if (editingId) {
-                res = await promotionApi.update(editingId, payload);
+                res = await promotionApi.update(editingId, formData);
             } else {
-                res = await promotionApi.create(payload);
+                res = await promotionApi.create(formData);
             }
             if (res.success) {
                 onToast(editingId ? 'Cập nhật ưu đãi thành công!' : 'Tạo ưu đãi mới thành công!', 'success');
@@ -228,7 +234,17 @@ export default function PromotionsPage({ onToast }: PromotionsPageProps) {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="form-label">URL Hình ảnh *</label>
+                                <label className="form-label">Tải lên hình ảnh</label>
+                                <input
+                                    type="file"
+                                    className="form-input"
+                                    accept="image/*"
+                                    onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                                    id="input-file-promotion"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Hoặc URL Hình ảnh</label>
                                 <input className="form-input" placeholder="https://example.com/promo.jpg" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} />
                             </div>
                             <div className="form-row">

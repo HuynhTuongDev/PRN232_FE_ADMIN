@@ -33,6 +33,7 @@ export default function BlogsPage({ onToast }: BlogsPageProps) {
     const [form, setForm] = useState<BlogForm>(emptyForm);
     const [saving, setSaving] = useState(false);
     const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const loadBlogs = async () => {
         setLoading(true);
@@ -53,6 +54,7 @@ export default function BlogsPage({ onToast }: BlogsPageProps) {
     const openCreate = () => {
         setEditingId(null);
         setForm(emptyForm);
+        setSelectedFile(null);
         setShowModal(true);
     };
 
@@ -66,6 +68,7 @@ export default function BlogsPage({ onToast }: BlogsPageProps) {
             tag: blog.tag || '',
             author: blog.author || 'Admin',
         });
+        setSelectedFile(null);
         setShowModal(true);
     };
 
@@ -76,12 +79,23 @@ export default function BlogsPage({ onToast }: BlogsPageProps) {
         }
         setSaving(true);
         try {
-            const payload = { ...form };
+            const formData = new FormData();
+            formData.append('title', form.title);
+            formData.append('content', form.content);
+            if (form.description) formData.append('description', form.description);
+            if (form.tag) formData.append('tag', form.tag);
+            if (form.author) formData.append('author', form.author);
+            if (form.image) formData.append('image', form.image);
+
+            if (selectedFile) {
+                formData.append('file', selectedFile);
+            }
+
             let res;
             if (editingId) {
-                res = await blogApi.update(editingId, payload);
+                res = await blogApi.update(editingId, formData);
             } else {
-                res = await blogApi.create(payload);
+                res = await blogApi.create(formData);
             }
             if (res.success) {
                 onToast(editingId ? 'Cập nhật bài viết thành công!' : 'Tạo bài viết mới thành công!', 'success');
@@ -205,7 +219,17 @@ export default function BlogsPage({ onToast }: BlogsPageProps) {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="form-label">URL Hình ảnh *</label>
+                                <label className="form-label">Tải lên hình ảnh</label>
+                                <input
+                                    type="file"
+                                    className="form-input"
+                                    accept="image/*"
+                                    onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                                    id="input-file-blog"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Hoặc URL Hình ảnh</label>
                                 <input className="form-input" placeholder="https://example.com/image.jpg" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} />
                             </div>
                             <div className="form-group">

@@ -50,6 +50,7 @@ export default function MotorbikesPage({ onToast }: MotorbikesPageProps) {
     const [form, setForm] = useState<MotorbikeForm>(emptyForm);
     const [saving, setSaving] = useState(false);
     const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
     const limit = 10;
@@ -82,6 +83,7 @@ export default function MotorbikesPage({ onToast }: MotorbikesPageProps) {
     const openCreate = () => {
         setEditingId(null);
         setForm(emptyForm);
+        setSelectedFiles(null);
         setShowModal(true);
     };
 
@@ -99,6 +101,7 @@ export default function MotorbikesPage({ onToast }: MotorbikesPageProps) {
             engineSize: motorbike.engineSize || '',
             status: motorbike.status || 'AVAILABLE',
         });
+        setSelectedFiles(null);
         setShowModal(true);
     };
 
@@ -109,24 +112,35 @@ export default function MotorbikesPage({ onToast }: MotorbikesPageProps) {
         }
         setSaving(true);
         try {
-            const payload: any = {
-                name: form.name,
-                type: form.type,
-                pricePerDay: parseFloat(form.pricePerDay),
-                description: form.description || undefined,
-                licensePlate: form.licensePlate,
-                year: form.year ? parseInt(form.year) : undefined,
-                images: form.images ? form.images.split(',').map((s: string) => s.trim()).filter(Boolean) : [],
-                fuelCapacity: form.fuelCapacity || undefined,
-                engineSize: form.engineSize || undefined,
-                status: form.status,
-            };
+            const formData = new FormData();
+            formData.append('name', form.name);
+            formData.append('type', form.type);
+            formData.append('pricePerDay', form.pricePerDay);
+            if (form.description) formData.append('description', form.description);
+            formData.append('licensePlate', form.licensePlate);
+            if (form.year) formData.append('year', form.year);
+            formData.append('status', form.status);
+            if (form.fuelCapacity) formData.append('fuelCapacity', form.fuelCapacity);
+            if (form.engineSize) formData.append('engineSize', form.engineSize);
+
+            // Add existing images if any
+            if (form.images) {
+                const existingImages = form.images.split(',').map((s: string) => s.trim()).filter(Boolean);
+                existingImages.forEach(img => formData.append('images[]', img));
+            }
+
+            // Add new files
+            if (selectedFiles) {
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    formData.append('files', selectedFiles[i]);
+                }
+            }
 
             let res;
             if (editingId) {
-                res = await motorbikeApi.update(editingId, payload);
+                res = await motorbikeApi.update(editingId, formData);
             } else {
-                res = await motorbikeApi.create(payload);
+                res = await motorbikeApi.create(formData);
             }
 
             if (res.success) {
@@ -338,7 +352,23 @@ export default function MotorbikesPage({ onToast }: MotorbikesPageProps) {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="form-label">URL Hình ảnh (cách nhau bởi dấu phẩy)</label>
+                                <label className="form-label">Tải lên hình ảnh (Chọn tối đa 10 ảnh)</label>
+                                <input
+                                    type="file"
+                                    className="form-input"
+                                    multiple
+                                    accept="image/*"
+                                    onChange={(e) => setSelectedFiles(e.target.files)}
+                                    id="input-file-motorbike"
+                                />
+                                {selectedFiles && selectedFiles.length > 0 && (
+                                    <div style={{ fontSize: '12px', marginTop: '4px', color: 'var(--primary)' }}>
+                                        {selectedFiles.length} file đã chọn
+                                    </div>
+                                )}
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Hoặc URL Hình ảnh (cách nhau bởi dấu phẩy)</label>
                                 <input className="form-input" placeholder="https://example.com/image1.jpg, https://..." value={form.images} onChange={(e) => setForm({ ...form, images: e.target.value })} />
                             </div>
                             <div className="form-group">
