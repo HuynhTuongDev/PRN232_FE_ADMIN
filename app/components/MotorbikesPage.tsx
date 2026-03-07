@@ -126,7 +126,7 @@ export default function MotorbikesPage({ onToast }: MotorbikesPageProps) {
             // Add existing images if any
             if (form.images) {
                 const existingImages = form.images.split(',').map((s: string) => s.trim()).filter(Boolean);
-                existingImages.forEach(img => formData.append('images[]', img));
+                existingImages.forEach(img => formData.append('images', img));
             }
 
             // Add new files

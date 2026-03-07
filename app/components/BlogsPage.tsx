@@ -73,7 +73,7 @@ export default function BlogsPage({ onToast }: BlogsPageProps) {
     };
 
     const handleSave = async () => {
-        if (!form.title || !form.content || !form.image) {
+        if (!form.title || !form.content || (!form.image && !selectedFile)) {
             onToast('Vui lòng điền đầy đủ tiêu đề, nội dung và hình ảnh', 'warning');
             return;
         }

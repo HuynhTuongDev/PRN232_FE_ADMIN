@@ -76,8 +76,8 @@ export default function PromotionsPage({ onToast }: PromotionsPageProps) {
     };
 
     const handleSave = async () => {
-        if (!form.title || !form.description || !form.image) {
-            onToast('Vui lòng điền đầy đủ thông tin bắt buộc', 'warning');
+        if (!form.title || !form.description || (!form.image && !selectedFile)) {
+            onToast('Vui lòng điền đầy đủ thông tin bắt buộc và hình ảnh', 'warning');
             return;
         }
         setSaving(true);

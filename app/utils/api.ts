@@ -123,13 +123,13 @@ export const motorbikeApi = {
     create: (data: any) =>
         apiRequest('/motorbikes', {
             method: 'POST',
-            body: JSON.stringify(data),
+            body: data instanceof FormData ? data : JSON.stringify(data),
         }),
 
     update: (id: string, data: any) =>
         apiRequest(`/motorbikes/${id}`, {
             method: 'PUT',
-            body: JSON.stringify(data),
+            body: data instanceof FormData ? data : JSON.stringify(data),
         }),
 
     delete: (id: string) =>
@@ -164,13 +164,13 @@ export const blogApi = {
     create: (data: any) =>
         apiRequest('/blogs', {
             method: 'POST',
-            body: JSON.stringify(data),
+            body: data instanceof FormData ? data : JSON.stringify(data),
         }),
 
     update: (id: string, data: any) =>
         apiRequest(`/blogs/${id}`, {
             method: 'PUT',
-            body: JSON.stringify(data),
+            body: data instanceof FormData ? data : JSON.stringify(data),
         }),
 
     delete: (id: string) =>
@@ -188,13 +188,13 @@ export const promotionApi = {
     create: (data: any) =>
         apiRequest('/promotions', {
             method: 'POST',
-            body: JSON.stringify(data),
+            body: data instanceof FormData ? data : JSON.stringify(data),
         }),
 
     update: (id: string, data: any) =>
         apiRequest(`/promotions/${id}`, {
             method: 'PUT',
-            body: JSON.stringify(data),
+            body: data instanceof FormData ? data : JSON.stringify(data),
         }),
 
     delete: (id: string) =>
