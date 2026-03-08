@@ -2,7 +2,7 @@
 // GoRide Manager - API Service
 // ============================================
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://prn-232-be.vercel.app/api/v1';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
 // ---- Auth Token Management ----
 export function getAccessToken(): string | null {
@@ -213,6 +213,26 @@ export const promotionApi = {
 };
 
 // ============================================
+// PAYMENT API (MOCK)
+// ============================================
+const MOCK_PAYMENTS = [
+    { id: 'PAY-001', rentalId: 'REN-101', customerName: 'Nguyễn Văn A', amount: 500000, method: 'BANK_TRANSFER', status: 'SUCCESS', date: '2024-03-01T10:00:00Z', transactionId: 'TXN123456789' },
+    { id: 'PAY-002', rentalId: 'REN-102', customerName: 'Trần Thị B', amount: 1200000, method: 'MOMO', status: 'PENDING', date: '2024-03-05T14:30:00Z', transactionId: 'MOMO987654321' },
+    { id: 'PAY-003', rentalId: 'REN-103', customerName: 'Lê Văn C', amount: 350000, method: 'CASH', status: 'SUCCESS', date: '2024-03-04T09:15:00Z', transactionId: 'CASH-REF-001' },
+    { id: 'PAY-004', rentalId: 'REN-104', customerName: 'Phạm Minh D', amount: 800000, method: 'BANK_TRANSFER', status: 'FAILED', date: '2024-03-06T11:20:00Z', transactionId: 'TXN999888777' },
+    { id: 'PAY-005', rentalId: 'REN-105', customerName: 'Hoàng Anh E', amount: 2100000, method: 'MOMO', status: 'SUCCESS', date: '2024-03-02T16:45:00Z', transactionId: 'MOMO112233445' },
+];
+
+export const paymentApi = {
+    getAll: () => apiRequest('/payment/all'),
+    updateStatus: (id: string, status: string) =>
+        apiRequest(`/payment/${id}/status`, {
+            method: 'PUT',
+            body: JSON.stringify({ status }),
+        }),
+};
+
+// ============================================
 // HELPER: Format Price VND
 // ============================================
 export function formatPrice(price: string | number): string {
@@ -268,4 +288,84 @@ export const rentalStatusMap: Record<string, { label: string; badge: string }> =
 export const userRoleMap: Record<string, { label: string; badge: string }> = {
     ADMIN: { label: 'Admin', badge: 'purple' },
     CUSTOMER: { label: 'Khách hàng', badge: 'info' },
+};
+
+export const paymentStatusMap: Record<string, { label: string; badge: string }> = {
+    PENDING: { label: 'Chờ xử lý', badge: 'warning' },
+    SUCCESS: { label: 'Thành công', badge: 'success' },
+    FAILED: { label: 'Thất bại', badge: 'error' },
+};
+
+export const paymentMethodMap: Record<string, string> = {
+    CASH: 'Tiền mặt',
+    BANK_TRANSFER: 'Chuyển khoản',
+    MOMO: 'Ví MoMo',
+};
+
+// ============================================
+// CHAT API (MOCK)
+// ============================================
+const MOCK_CONTACTS = [
+    { id: 'usr-1', name: 'Nguyễn Văn A', avatar: '', lastMessage: 'Tôi muốn hỏi về con Exciter 150', time: '10:30', unread: 2, online: true },
+    { id: 'usr-2', name: 'Trần Thị B', avatar: '', lastMessage: 'Cảm ơn shop nhiều nhé!', time: 'Hôm qua', unread: 0, online: false },
+    { id: 'usr-3', name: 'Lê Văn C', avatar: '', lastMessage: 'Xe này còn không ạ?', time: '2 ngày trước', unread: 0, online: true },
+    { id: 'usr-4', name: 'Phạm Minh D', avatar: '', lastMessage: 'Gửi cho mình xem thêm ảnh nhé', time: '1 tuần trước', unread: 0, online: false },
+];
+
+const MOCK_MESSAGES: Record<string, any[]> = {
+    'usr-1': [
+        { id: 1, sender: 'customer', text: 'Chào shop, mình đang quan tâm đến xe Exciter 150', time: '10:25' },
+        { id: 2, sender: 'admin', text: 'Chào bạn, hiện shop đang còn 3 chiếc Exciter 150 nhé. Bạn muốn xem đời năm bao nhiêu?', time: '10:26' },
+        { id: 3, sender: 'customer', text: 'Mình muốn xem đời 2022 màu xanh GP', time: '10:28' },
+        { id: 4, sender: 'customer', text: 'Tôi muốn hỏi về con Exciter 150', time: '10:30' },
+    ],
+    'usr-2': [
+        { id: 1, sender: 'customer', text: 'Xe đi rất tốt ạ. Lần sau mình sẽ ủng hộ tiếp', time: '09:00' },
+        { id: 2, sender: 'admin', text: 'Cảm ơn bạn đã tin tưởng GoRide nhé! Chúc bạn vạn dặm bình an.', time: '09:05' },
+        { id: 3, sender: 'customer', text: 'Cảm ơn shop nhiều nhé!', time: '09:10' },
+    ]
+};
+
+export const chatApi = {
+    getContacts: () => apiRequest('/chat/contacts'),
+    getMessages: (userId: string) => apiRequest(`/chat/messages/${userId}`),
+    sendMessage: (receiverId: string, content: string) =>
+        apiRequest('/chat/send', {
+            method: 'POST',
+            body: JSON.stringify({ receiverId, content }),
+        }),
+};
+
+// ============================================
+// OPERATIONAL API (MOCK)
+// ============================================
+const MOCK_VERIFICATIONS = [
+    { id: 'v-1', userId: 'usr-1', name: 'Nguyễn Văn A', email: 'vana@gmail.com', documents: { idFront: 'https://images.unsplash.com/photo-1554224155-1696413565d3?w=500', idBack: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=500', license: 'https://images.unsplash.com/photo-1559030623-0226b1241edd?w=500' }, status: 'PENDING', date: '2024-03-06' },
+    { id: 'v-2', userId: 'usr-4', name: 'Phạm Minh D', email: 'dpham@gmail.com', documents: { idFront: 'https://images.unsplash.com/photo-1554224155-1696413565d3?w=500', idBack: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=500', license: 'https://images.unsplash.com/photo-1559030623-0226b1241edd?w=500' }, status: 'PENDING', date: '2024-03-05' },
+];
+
+export const operationalApi = {
+    // User Verification
+    getPendingVerifications: async () => {
+        await new Promise(resolve => setTimeout(resolve, 400));
+        return { data: MOCK_VERIFICATIONS.filter(v => v.status === 'PENDING'), success: true };
+    },
+    updateVerification: async (id: string, status: 'APPROVED' | 'REJECTED', reason?: string) => {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const v = MOCK_VERIFICATIONS.find(item => item.id === id);
+        if (v) v.status = status;
+        return { success: true };
+    },
+
+    // Handover & Return are built on top of rentalApi but filtered
+    getHandoverList: async () => {
+        const res = await rentalApi.getAll();
+        const rentals = res.data.rentals || res.data || [];
+        return { data: rentals.filter((r: any) => r.status === 'CONFIRMED'), success: true };
+    },
+    getReturnList: async () => {
+        const res = await rentalApi.getAll();
+        const rentals = res.data.rentals || res.data || [];
+        return { data: rentals.filter((r: any) => r.status === 'ONGOING'), success: true };
+    }
 };
