@@ -94,10 +94,9 @@ export const authApi = {
 // USER API
 // ============================================
 export const userApi = {
-    getAll: (page?: number, limit?: number, search?: string) => {
+    getAll: (page?: number, search?: string) => {
         const query = new URLSearchParams();
         if (page) query.append('page', String(page));
-        if (limit) query.append('limit', String(limit));
         if (search) query.append('search', search);
         const qStr = query.toString();
         return apiRequest(`/users${qStr ? '?' + qStr : ''}`);
@@ -120,7 +119,8 @@ export const userApi = {
 // ============================================
 export const motorbikeApi = {
     getAll: (params?: { page?: number; limit?: number; type?: string; status?: string; search?: string }) => {
-        const query = params ? '?' + new URLSearchParams(Object.entries(params).filter(([_, v]) => v !== undefined).map(([k, v]) => [k, String(v)])).toString() : '';
+        const filteredParams = params ? Object.fromEntries(Object.entries(params).filter(([k]) => k !== 'limit')) : undefined;
+        const query = filteredParams ? '?' + new URLSearchParams(Object.entries(filteredParams).filter(([_, v]) => v !== undefined).map(([k, v]) => [k, String(v)])).toString() : '';
         return apiRequest(`/motorbikes${query}`);
     },
 
@@ -146,10 +146,9 @@ export const motorbikeApi = {
 // RENTAL API
 // ============================================
 export const rentalApi = {
-    getAll: (page?: number, limit?: number, status?: string) => {
+    getAll: (page?: number, status?: string) => {
         const query = new URLSearchParams();
         if (page) query.append('page', String(page));
-        if (limit) query.append('limit', String(limit));
         if (status) query.append('status', status);
         const qStr = query.toString();
         return apiRequest(`/rentals/all${qStr ? '?' + qStr : ''}`);
