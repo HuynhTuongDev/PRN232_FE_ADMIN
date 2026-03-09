@@ -91,7 +91,7 @@ export default function DashboardPage() {
 
             {/* Stats Cards */}
             <div className="stats-grid" style={{ marginBottom: '32px' }}>
-                <div className="stat-card glass-card" style={{ border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                <div className="stat-card glass-card">
                     <div className="stat-info">
                         <h3 style={{ textTransform: 'uppercase', fontSize: '11px', letterSpacing: '1px', opacity: 0.6, marginBottom: '12px' }}>Tổng xe hợp tác</h3>
                         <div className="stat-value" style={{ fontSize: '2.5rem', fontWeight: 800, lineHeight: 1 }}>{stats.totalMotorbikes}</div>
@@ -100,36 +100,36 @@ export default function DashboardPage() {
                             {stats.availableMotorbikes} xe đang có sẵn
                         </div>
                     </div>
-                    <div className="stat-icon" style={{ background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%)', color: '#10b981', width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>
+                    <div className="stat-icon" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18.5" cy="17.5" r="3.5" /><circle cx="5.5" cy="17.5" r="3.5" /><circle cx="15" cy="5" r="1" /><path d="M12 17.5V14l-3-3 4-3 2 3h2" /></svg>
                     </div>
                 </div>
 
-                <div className="stat-card glass-card" style={{ border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                <div className="stat-card glass-card">
                     <div className="stat-info">
                         <h3 style={{ textTransform: 'uppercase', fontSize: '11px', letterSpacing: '1px', opacity: 0.6, marginBottom: '12px' }}>Đơn đặt xe</h3>
                         <div className="stat-value" style={{ fontSize: '2.5rem', fontWeight: 800, lineHeight: 1 }}>{stats.totalRentals}</div>
                         <div className="stat-change" style={{ color: '#3b82f6', marginTop: '16px', fontSize: '13px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" /></svg>
                             {stats.pendingRentals} đơn mới hôm nay
                         </div>
                     </div>
-                    <div className="stat-icon" style={{ background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%)', color: '#3b82f6', width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                    <div className="stat-icon" style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><rect x="8" y="2" width="8" height="4" rx="1" ry="1" /></svg>
                     </div>
                 </div>
 
-                <div className="stat-card glass-card" style={{ border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                <div className="stat-card glass-card">
                     <div className="stat-info">
                         <h3 style={{ textTransform: 'uppercase', fontSize: '11px', letterSpacing: '1px', opacity: 0.6, marginBottom: '12px' }}>Doanh thu ước tính</h3>
                         <div className="stat-value" style={{ fontSize: '1.75rem', fontWeight: 800, lineHeight: 1.5 }}>{formatPrice(stats.revenue)}</div>
                         <div className="stat-change" style={{ color: '#f59e0b', marginTop: '8px', fontSize: '13px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                             Từ đơn hoàn thành
                         </div>
                     </div>
-                    <div className="stat-icon" style={{ background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%)', color: '#f59e0b', width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <div className="stat-icon" style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                     </div>
                 </div>
             </div>
@@ -137,7 +137,7 @@ export default function DashboardPage() {
             {/* Recent Rentals & Additional Stats */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '24px', marginBottom: '24px' }}>
                 <div className="table-container glass-card" style={{ padding: '0', overflow: 'hidden' }}>
-                    <div className="table-header" style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: 'rgba(255, 255, 255, 0.02)' }}>
+                    <div className="table-header">
                         <h3 className="table-title" style={{ margin: 0, fontSize: '1rem', fontWeight: 600 }}>Đơn thuê gần đây</h3>
                     </div>
                     {recentRentals.length > 0 ? (
@@ -156,9 +156,9 @@ export default function DashboardPage() {
                                         <tr key={rental.id}>
                                             <td style={{ paddingLeft: '24px' }}>
                                                 <div className="user-cell" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                    <div className="user-avatar-sm" style={{ 
-                                                        width: '28px', height: '28px', borderRadius: '50%', 
-                                                        background: 'linear-gradient(135deg, var(--primary-color), #a855f7)',
+                                                    <div className="user-avatar-sm" style={{
+                                                        width: '28px', height: '28px', borderRadius: '50%',
+                                                        background: 'var(--primary-500)',
                                                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                         fontSize: '10px', fontWeight: 'bold', color: 'white'
                                                     }}>{rental.user?.name?.charAt(0) || 'U'}</div>
@@ -181,28 +181,28 @@ export default function DashboardPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     <div className="glass-card" style={{ padding: '24px' }}>
                         <h3 style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#f43f5e' }}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#f43f5e' }}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /></svg>
                             Nội dung
                         </h3>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
                             <span style={{ fontSize: '2rem', fontWeight: 700 }}>{stats.totalBlogs}</span>
                             <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>bài viết mới</span>
                         </div>
-                        <div style={{ marginTop: '12px', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                        <div style={{ marginTop: '12px', height: '4px', background: 'var(--surface-bg)', borderRadius: '2px', overflow: 'hidden' }}>
                             <div style={{ width: '70%', height: '100%', background: '#f43f5e', borderRadius: '2px' }}></div>
                         </div>
                     </div>
 
                     <div className="glass-card" style={{ padding: '24px' }}>
                         <h3 style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#10b981' }}><path d="M20 12V8H4v4"/><path d="M2 12h20"/><path d="M20 12v8H4v-8"/><path d="m12 8 4-4"/><path d="m12 8-4-4"/></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#10b981' }}><path d="M20 12V8H4v4" /><path d="M2 12h20" /><path d="M20 12v8H4v-8" /><path d="m12 8 4-4" /><path d="m12 8-4-4" /></svg>
                             Chiến dịch
                         </h3>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
                             <span style={{ fontSize: '2rem', fontWeight: 700 }}>{stats.totalPromotions}</span>
                             <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>ưu đãi đang chạy</span>
                         </div>
-                        <div style={{ marginTop: '12px', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                        <div style={{ marginTop: '12px', height: '4px', background: 'var(--surface-bg)', borderRadius: '2px', overflow: 'hidden' }}>
                             <div style={{ width: '45%', height: '100%', background: '#10b981', borderRadius: '2px' }}></div>
                         </div>
                     </div>

@@ -1,0 +1,347 @@
+/* Premium Modern UI Overrides */
+
+:root {
+    --primary-500: #10B981;
+    --primary-600: #059669;
+    --primary-400: #34D399;
+    --primary-50: #ECFDF5;
+
+    --accent-blue: #3B82F6;
+    --accent-cyan: #06B6D4;
+    --accent-purple: #8B5CF6;
+    --accent-amber: #F59E0B;
+    --accent-rose: #F43F5E;
+
+    --surface-bg: #F4F7FE;
+    /* Soft UI background */
+    --surface-card: #FFFFFF;
+    --surface-elevated: #F8FAFC;
+
+    --text-primary: #1E293B;
+    --text-secondary: #64748B;
+    --text-muted: #94A3B8;
+
+    --border-default: transparent;
+    --border-hover: #CBD5E1;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    --shadow-premium: 0px 10px 40px rgba(18, 38, 63, 0.04);
+    --shadow-card-hover: 0px 20px 40px rgba(18, 38, 63, 0.06);
+
+    --sidebar-width: 280px;
+    --header-height: 88px;
+}
+
+body {
+    background-color: var(--surface-bg);
+    background-image: none !important;
+    /* Remove legacy spheres */
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.2px;
+}
+
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    padding: 0 32px 32px;
+    padding-top: calc(var(--header-height) + 24px);
+    position: relative;
+    z-index: 10;
+}
+
+/* Sidebar Styling - Clean and Crisp */
+.sidebar {
+    background: var(--surface-card) !important;
+    border-right: none !important;
+    box-shadow: 2px 0 24px rgba(18, 38, 63, 0.03);
+    z-index: 100;
+    padding: 12px;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--border-hover);
+    border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-header {
+    padding: 24px 20px;
+    border-bottom: none !important;
+}
+
+.sidebar-logo {
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600)) !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+.sidebar-brand h1 {
+    color: #2B3674 !important;
+    background: none !important;
+    -webkit-text-fill-color: initial !important;
+}
+
+.sidebar-nav {
+    padding: 0 8px;
+}
+
+.sidebar-section-title {
+    color: #A3AED0 !important;
+    font-size: 11px;
+    font-weight: 800 !important;
+    letter-spacing: 1px;
+    padding: 24px 12px 12px;
+    text-transform: uppercase;
+}
+
+.sidebar-link {
+    color: #A3AED0 !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    border-radius: 12px !important;
+    margin-bottom: 4px;
+    padding: 12px 16px;
+    transition: all 0.2s;
+    border: none !important;
+    background: transparent !important;
+}
+
+.sidebar-link:hover {
+    background: #F4F7FE !important;
+    color: #2B3674 !important;
+}
+
+.sidebar-link.active {
+    background: var(--primary-500) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+.sidebar-link.active::before {
+    display: none !important;
+}
+
+.sidebar-link-icon {
+    opacity: 1 !important;
+}
+
+.sidebar-link-icon svg {
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+}
+
+.sidebar-link.active .sidebar-link-icon {
+    color: white !important;
+}
+
+.sidebar-footer {
+    border-top: 1px solid #F4F7FE !important;
+    padding: 16px 8px;
+}
+
+.sidebar-footer .sidebar-link {
+    color: var(--accent-rose) !important;
+}
+
+.sidebar-footer .sidebar-link:hover {
+    background: #FEF2F2 !important;
+}
+
+/* Header Styling - Floating transparent rounded */
+.header {
+    margin: 16px 32px !important;
+    left: var(--sidebar-width) !important;
+    width: calc(100% - var(--sidebar-width) - 64px) !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    height: 76px !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.header-title {
+    color: #2B3674 !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+}
+
+.header-subtitle {
+    color: #A3AED0 !important;
+    font-size: 13px !important;
+}
+
+.header-btn {
+    background: #F4F7FE !important;
+    border: none !important;
+    border-radius: 50% !important;
+    color: #A3AED0 !important;
+}
+
+.header-btn:hover {
+    background: white !important;
+    color: var(--primary-500) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.header-avatar {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600)) !important;
+}
+
+/* Glass Card / Premium Surface Overrides */
+.glass-effect,
+.glass-card,
+.table-container {
+    background: var(--surface-card) !important;
+    border: none !important;
+    box-shadow: var(--shadow-premium) !important;
+    border-radius: 24px !important;
+    backdrop-filter: none !important;
+}
+
+.glass-card::before {
+    display: none !important;
+}
+
+.glass-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: var(--shadow-card-hover) !important;
+}
+
+/* Tables Customizations */
+.table-header {
+    border-bottom: 1px solid #F4F7FE !important;
+    background: transparent !important;
+    padding: 24px 32px !important;
+}
+
+.table-title {
+    color: #2B3674 !important;
+}
+
+.data-table th {
+    background: transparent !important;
+    color: #A3AED0 !important;
+    font-weight: 700 !important;
+    padding-left: 32px !important;
+    border-bottom: 1px solid #F4F7FE !important;
+}
+
+.data-table td {
+    border-bottom: 1px solid #F4F7FE !important;
+    color: #2B3674 !important;
+    font-weight: 500 !important;
+    padding: 24px 32px !important;
+}
+
+/* Forms & Inputs */
+.search-input {
+    background: #F4F7FE !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 12px 16px 12px 42px !important;
+    color: #2B3674 !important;
+    font-weight: 500 !important;
+}
+
+.search-input::placeholder {
+    color: #A3AED0 !important;
+}
+
+.form-select,
+.filter-select {
+    background-color: #F4F7FE !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 12px 36px 12px 16px !important;
+    color: #2B3674 !important;
+    font-weight: 600 !important;
+    min-width: 180px !important;
+    width: auto !important;
+}
+
+/* Button Overrides */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600)) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25) !important;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--primary-400), var(--primary-500)) !important;
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Dashboard Cards Overrides */
+.stat-card {
+    padding: 28px !important;
+    border: none !important;
+}
+
+.stat-card .stat-value {
+    color: #2B3674 !important;
+    font-size: 36px !important;
+    letter-spacing: -1px;
+}
+
+.stat-card .stat-info h3 {
+    color: #A3AED0 !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+}
+
+.badge {
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    border: none !important;
+}
+
+.badge.success {
+    background: #ECFDF5 !important;
+    color: #059669 !important;
+}
+
+.badge.warning {
+    background: #FFFBEB !important;
+    color: #D97706 !important;
+}
+
+.badge.info {
+    background: #EFF6FF !important;
+    color: #2563EB !important;
+}
+
+.badge.error {
+    background: #FEF2F2 !important;
+    color: #DC2626 !important;
+}
+
+.badge.purple {
+    background: #FAF5FF !important;
+    color: #7E22CE !important;
+}
+
+/* Remove login page artifacts */
+.login-page::before,
+.login-page::after {
+    display: none !important;
+}
