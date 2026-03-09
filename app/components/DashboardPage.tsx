@@ -24,9 +24,9 @@ export default function DashboardPage() {
     const loadDashboardData = async () => {
         try {
             const [motorbikeRes, userRes, rentalRes, blogRes, promoRes] = await Promise.all([
-                motorbikeApi.getAll({ limit: 100 }),
-                userApi.getAll(1, 100),
-                rentalApi.getAll(1, 100),
+                motorbikeApi.getAll(),
+                userApi.getAll(1),
+                rentalApi.getAll(1),
                 blogApi.getAll(),
                 promotionApi.getAll(),
             ]);
