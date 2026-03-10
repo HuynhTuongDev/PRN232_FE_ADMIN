@@ -217,15 +217,34 @@ export const promotionApi = {
 };
 
 // ============================================
-// PAYMENT API (MOCK)
+// LOCATION API
 // ============================================
-const MOCK_PAYMENTS = [
-    { id: 'PAY-001', rentalId: 'REN-101', customerName: 'Nguyễn Văn A', amount: 500000, method: 'BANK_TRANSFER', status: 'SUCCESS', date: '2024-03-01T10:00:00Z', transactionId: 'TXN123456789' },
-    { id: 'PAY-002', rentalId: 'REN-102', customerName: 'Trần Thị B', amount: 1200000, method: 'MOMO', status: 'PENDING', date: '2024-03-05T14:30:00Z', transactionId: 'MOMO987654321' },
-    { id: 'PAY-003', rentalId: 'REN-103', customerName: 'Lê Văn C', amount: 350000, method: 'CASH', status: 'SUCCESS', date: '2024-03-04T09:15:00Z', transactionId: 'CASH-REF-001' },
-    { id: 'PAY-004', rentalId: 'REN-104', customerName: 'Phạm Minh D', amount: 800000, method: 'BANK_TRANSFER', status: 'FAILED', date: '2024-03-06T11:20:00Z', transactionId: 'TXN999888777' },
-    { id: 'PAY-005', rentalId: 'REN-105', customerName: 'Hoàng Anh E', amount: 2100000, method: 'MOMO', status: 'SUCCESS', date: '2024-03-02T16:45:00Z', transactionId: 'MOMO112233445' },
-];
+
+export const locationApi = {
+    getAll: () => apiRequest('/locations'),
+
+    getById: (id: number) => apiRequest(`/locations/${id}`),
+
+    create: (data: any) =>
+        apiRequest('/locations', {
+            method: 'POST',
+            body: JSON.stringify(data),
+        }),
+
+    update: (id: number, data: any) =>
+        apiRequest(`/locations/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+        }),
+
+    delete: (id: number) =>
+        apiRequest(`/locations/${id}`, { method: 'DELETE' }),
+
+};
+
+// ============================================
+// PAYMENT API
+// ============================================
 
 export const paymentApi = {
     getAll: () => apiRequest('/payment/all'),
