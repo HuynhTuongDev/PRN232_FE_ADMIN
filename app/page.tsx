@@ -11,6 +11,7 @@ import RentalsPage from './components/RentalsPage';
 import UsersPage from './components/UsersPage';
 import BlogsPage from './components/BlogsPage';
 import PromotionsPage from './components/PromotionsPage';
+import LocationsPage from './components/LocationsPage';
 import PaymentsPage from './components/PaymentsPage';
 import MessagesPage from './components/MessagesPage';
 import HandoverPage from './components/HandoverPage';
@@ -84,6 +85,8 @@ export default function Home() {
         return <BlogsPage onToast={handleToast} />;
       case 'promotions':
         return <PromotionsPage onToast={handleToast} />;
+      case 'locations':
+        return <LocationsPage onToast={handleToast} />;
       case 'payments':
         return <PaymentsPage onToast={handleToast} />;
       case 'messages':
