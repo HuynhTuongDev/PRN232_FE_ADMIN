@@ -156,10 +156,15 @@ export const rentalApi = {
 
     getById: (id: string) => apiRequest(`/rentals/${id}`),
 
-    updateStatus: (id: string, status: string) =>
+    updateStatus: (id: string, status: string, metadata?: any) =>
         apiRequest(`/rentals/${id}/status`, {
             method: 'PUT',
-            body: JSON.stringify({ status }),
+            body: JSON.stringify({ status, metadata }),
+        }),
+    updateMetadata: (id: string, metadata: any) =>
+        apiRequest(`/rentals/${id}/metadata`, {
+            method: 'PUT',
+            body: JSON.stringify(metadata),
         }),
 };
 
@@ -291,7 +296,7 @@ export const userRoleMap: Record<string, { label: string; badge: string }> = {
 
 export const paymentStatusMap: Record<string, { label: string; badge: string }> = {
     PENDING: { label: 'Chờ xử lý', badge: 'warning' },
-    SUCCESS: { label: 'Thành công', badge: 'success' },
+    COMPLETED: { label: 'Thành công', badge: 'success' },
     FAILED: { label: 'Thất bại', badge: 'error' },
 };
 

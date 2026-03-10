@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { chatApi, getUser } from '../utils/api';
+import { socketService } from '../services/socket.service';
 
 interface Contact {
     id: string;
@@ -28,6 +29,7 @@ export default function MessagesPage({ onToast }: { onToast: (msg: string, type:
     const [loadingContacts, setLoadingContacts] = useState(true);
     const [loadingMessages, setLoadingMessages] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
+    const socketInitialized = useRef(false);
     const user = getUser();
 
     const fetchContacts = useCallback(async () => {
@@ -54,7 +56,7 @@ export default function MessagesPage({ onToast }: { onToast: (msg: string, type:
             if (res.success) {
                 const mappedMessages = res.data.map((m: any) => ({
                     id: m.id,
-                    sender: m.senderId === user?.id ? 'admin' : 'customer',
+                    sender: m.senderId === null ? 'admin' : 'customer',
                     text: m.content,
                     time: new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 }));
@@ -68,8 +70,38 @@ export default function MessagesPage({ onToast }: { onToast: (msg: string, type:
     }, [onToast, user?.id]);
 
     useEffect(() => {
-        fetchContacts();
-    }, [fetchContacts]);
+        if (!socketInitialized.current && user) {
+            fetchContacts();
+            // Admins join their own ID AND the admin-placeholder room
+            socketService.connect('admin-placeholder'); 
+            socketService.onReceiveMessage((m) => {
+                const mappedMsg = {
+                    id: m.id,
+                    sender: m.senderId === null ? 'admin' : 'customer',
+                    text: m.content,
+                    time: new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+
+                setMessages(prev => {
+                    if (prev.find(old => old.id === mappedMsg.id)) return prev;
+                    return [...prev, mappedMsg as Message];
+                });
+
+                // Update contact list last message
+                setContacts(prev => prev.map(c => 
+                    (c.id === m.senderId || c.id === m.receiverId) 
+                        ? { ...c, lastMessage: m.content, time: 'Vừa xong' } 
+                        : c
+                ));
+            });
+            socketInitialized.current = true;
+        }
+        return () => {
+            if (socketInitialized.current) {
+                socketService.offReceiveMessage();
+            }
+        };
+    }, [user?.id, fetchContacts]);
 
     useEffect(() => {
         if (activeContactId) {
@@ -91,22 +123,26 @@ export default function MessagesPage({ onToast }: { onToast: (msg: string, type:
         setInputText('');
 
         try {
-            const res = await chatApi.sendMessage(activeContactId, text);
-            if (res.success) {
-                const m = res.data;
-                const newMessage: Message = {
-                    id: m.id,
-                    sender: 'admin',
-                    text: m.content,
-                    time: new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                };
-                setMessages(prev => [...prev, newMessage]);
-                // Update last message in contact list
-                setContacts(prev => prev.map(c => 
-                    c.id === activeContactId ? { ...c, lastMessage: text, time: 'Vừa xong' } : c
-                ));
-            }
+            console.log('Admin: Sending message to', activeContactId, 'content:', text);
+            socketService.sendMessage({ receiverId: activeContactId, content: text });
+            
+            // Optimistic update
+            const tempMsg: Message = {
+                id: Date.now(),
+                sender: 'admin',
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            setMessages(prev => [...prev, tempMsg]);
+            
+            // Update contact list last message
+            setContacts(prev => prev.map(c => 
+                c.id === activeContactId 
+                    ? { ...c, lastMessage: text, time: 'Vừa xong' } 
+                    : c
+            ));
         } catch (error) {
+            console.error('Admin: Error sending message:', error);
             onToast('Lỗi gửi tin nhắn', 'error');
         }
     };
@@ -139,8 +175,8 @@ export default function MessagesPage({ onToast }: { onToast: (msg: string, type:
                                     cursor: 'pointer',
                                     marginBottom: '8px',
                                     transition: 'all 0.2s ease',
-                                    background: activeContactId === contact.id ? 'var(--primary-50)' : 'transparent',
-                                    border: activeContactId === contact.id ? '1px solid var(--primary-100)' : '1px solid transparent'
+                                    background: activeContactId === contact.id ? 'rgba(16, 185, 129, 0.1)' : 'transparent',
+                                    border: activeContactId === contact.id ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid transparent'
                                 }}
                             >
                                 <div style={{ position: 'relative', marginRight: '12px' }}>
@@ -148,7 +184,7 @@ export default function MessagesPage({ onToast }: { onToast: (msg: string, type:
                                         width: '44px', 
                                         height: '44px', 
                                         borderRadius: '50%', 
-                                        background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%)',
+                                        background: 'linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -165,7 +201,7 @@ export default function MessagesPage({ onToast }: { onToast: (msg: string, type:
                                             right: '2px', 
                                             width: '12px', 
                                             height: '12px', 
-                                            background: '#10b981', 
+                                            background: 'var(--primary-500)', 
                                             border: '2px solid #fff', 
                                             borderRadius: '50%' 
                                         }}></div>
@@ -189,7 +225,7 @@ export default function MessagesPage({ onToast }: { onToast: (msg: string, type:
                                 </div>
                                 {contact.unread > 0 && (
                                     <div style={{ 
-                                        background: 'var(--primary-color)', 
+                                        background: 'var(--primary-500)', 
                                         color: '#fff', 
                                         borderRadius: '10px', 
                                         padding: '2px 8px', 
@@ -241,11 +277,12 @@ export default function MessagesPage({ onToast }: { onToast: (msg: string, type:
                                     >
                                         <div style={{ 
                                             maxWidth: '70%', 
-                                            background: msg.sender === 'admin' ? 'var(--primary-color)' : 'rgba(0,0,0,0.04)',
+                                            background: msg.sender === 'admin' ? 'var(--primary-500)' : 'rgba(0,0,0,0.05)',
                                             color: msg.sender === 'admin' ? '#fff' : 'var(--text-primary)',
-                                            padding: '10px 16px',
-                                            borderRadius: msg.sender === 'admin' ? '16px 16px 2px 16px' : '16px 16px 16px 2px',
-                                            boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                                            padding: '12px 18px',
+                                            borderRadius: msg.sender === 'admin' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                                            boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+                                            border: msg.sender === 'admin' ? 'none' : '1px solid rgba(0,0,0,0.03)'
                                         }}>
                                             <div style={{ fontSize: '14px', lineHeight: '1.5' }}>{msg.text}</div>
                                             <div style={{ 
@@ -293,10 +330,10 @@ export default function MessagesPage({ onToast }: { onToast: (msg: string, type:
             
             <style jsx>{`
                 .chat-item:hover {
-                    background: rgba(0,0,0,0.02) !important;
+                    background: rgba(16, 185, 129, 0.03) !important;
                 }
                 .chat-item.active:hover {
-                    background: var(--primary-50) !important;
+                    background: rgba(16, 185, 129, 0.1) !important;
                 }
                 .animate-fade-in {
                     animation: fadeIn 0.3s ease;
