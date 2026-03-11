@@ -8,6 +8,14 @@ class SocketService {
 
     connect(userId: string) {
         if (this.socket?.connected || this.connecting) return;
+
+        // Vercel không hỗ trợ WebSocket hoặc background socket.io polling.
+        // Bỏ qua kết nối để tránh lỗi 404 Not Found hiển thị liên tục trong Console.
+        if (SOCKET_URL.includes('vercel.app')) {
+            console.log('Realtime socket interface is disabled on Vercel Serverless environment.');
+            return;
+        }
+
         this.connecting = true;
 
         this.socket = io(SOCKET_URL, {
