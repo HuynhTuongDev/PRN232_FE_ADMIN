@@ -124,7 +124,7 @@ export default function MessagesPage({ onToast }: { onToast: (msg: string, type:
 
         try {
             console.log('Admin: Sending message to', activeContactId, 'content:', text);
-            socketService.sendMessage({ receiverId: activeContactId, content: text });
+            await chatApi.sendMessage(activeContactId, text);
             
             // Optimistic update
             const tempMsg: Message = {

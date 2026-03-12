@@ -1,67 +1,57 @@
-import { io, Socket } from 'socket.io-client';
+import Pusher from 'pusher-js';
 
-const SOCKET_URL = 'https://prn-232-be.vercel.app/api/v1';
+const PUSHER_KEY = 'ab3a2b62b6523f45c70f';
+const PUSHER_CLUSTER = 'ap1';
 
 class SocketService {
-    private socket: Socket | null = null;
-    private connecting = false;
+    private pusher: Pusher | null = null;
+    private channel: any = null;
 
     connect(userId: string) {
-        if (this.socket?.connected || this.connecting) return;
+        if (this.pusher) return;
 
-        // Vercel không hỗ trợ WebSocket hoặc background socket.io polling.
-        // Bỏ qua kết nối để tránh lỗi 404 Not Found hiển thị liên tục trong Console.
-        if (SOCKET_URL.includes('vercel.app')) {
-            console.log('Realtime socket interface is disabled on Vercel Serverless environment.');
-            return;
-        }
-
-        this.connecting = true;
-
-        this.socket = io(SOCKET_URL, {
-            transports: ['polling', 'websocket'], // Ưu tiên polling trước, websocket sau để phù hợp hơn với Serverless
-            reconnection: true,
-            reconnectionAttempts: 3, // Giới hạn số lần thử lại để tránh console lỗi liên tục
-            reconnectionDelay: 2000,
+        console.log('Admin connecting to Pusher');
+        
+        this.pusher = new Pusher(PUSHER_KEY, {
+            cluster: PUSHER_CLUSTER,
+            forceTLS: true
         });
 
-        this.socket.on('connect', () => {
-            this.connecting = false;
-            console.log('Admin connected to socket server');
-            this.socket?.emit('join_room', userId);
+        // Admin usually listens on their userId and admin-room
+        const roomToJoin = userId === 'admin-placeholder' ? 'admin-room' : userId;
+        this.channel = this.pusher.subscribe(roomToJoin);
+
+        this.pusher.connection.bind('connected', () => {
+            console.log('Admin successfully connected to Pusher');
         });
 
-        this.socket.on('connect_error', (error) => {
-            this.connecting = false;
-            console.warn('Socket connection error (Vercel does not support native WebSockets):', error.message);
-            // Ngắt kết nối luôn để tránh spam console
-            if (this.socket) {
-                this.socket.disconnect();
-            }
-        });
-
-        this.socket.on('disconnect', () => {
-            this.connecting = false;
-            console.log('Admin disconnected from socket server');
+        this.pusher.connection.bind('error', (error: any) => {
+            console.warn('Pusher connection error:', error);
         });
     }
 
     onReceiveMessage(callback: (message: any) => void) {
-        this.socket?.on('receive_message', callback);
+        if (this.channel) {
+            this.channel.bind('receive_message', callback);
+        }
     }
 
     offReceiveMessage() {
-        this.socket?.off('receive_message');
+        if (this.channel) {
+            this.channel.unbind('receive_message');
+        }
     }
 
     sendMessage(payload: { receiverId?: string; content: string; isAI?: boolean }) {
-        this.socket?.emit('send_message', payload);
+        // Real-time sending should go through API for serverless consistency
+        console.warn('sendMessage via Pusher client is not recommended. Use API.');
     }
 
     disconnect() {
-        if (this.socket) {
-            this.socket.disconnect();
-            this.socket = null;
+        if (this.pusher) {
+            this.pusher.disconnect();
+            this.pusher = null;
+            this.channel = null;
         }
     }
 }
