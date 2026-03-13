@@ -10,6 +10,10 @@ interface PromotionsPageProps {
 interface PromoForm {
     title: string;
     description: string;
+    code: string;
+    discountType: string;
+    discountValue: string;
+    minOrderValue: string;
     image: string;
     badge: string;
     isActive: boolean;
@@ -20,6 +24,10 @@ interface PromoForm {
 const emptyForm: PromoForm = {
     title: '',
     description: '',
+    code: '',
+    discountType: 'PERCENTAGE',
+    discountValue: '',
+    minOrderValue: '0',
     image: '',
     badge: '',
     isActive: true,
@@ -65,6 +73,10 @@ export default function PromotionsPage({ onToast }: PromotionsPageProps) {
         setForm({
             title: promo.title || '',
             description: promo.description || '',
+            code: promo.code || '',
+            discountType: promo.discountType || 'PERCENTAGE',
+            discountValue: promo.discountValue?.toString() || '',
+            minOrderValue: promo.minOrderValue?.toString() || '0',
             image: promo.image || '',
             badge: promo.badge || '',
             isActive: promo.isActive ?? true,
@@ -85,6 +97,10 @@ export default function PromotionsPage({ onToast }: PromotionsPageProps) {
             const formData = new FormData();
             formData.append('title', form.title);
             formData.append('description', form.description);
+            formData.append('code', form.code);
+            formData.append('discountType', form.discountType);
+            formData.append('discountValue', form.discountValue);
+            formData.append('minOrderValue', form.minOrderValue);
             if (form.image) formData.append('image', form.image);
             if (form.badge) formData.append('badge', form.badge);
             formData.append('isActive', form.isActive.toString());
@@ -255,9 +271,32 @@ export default function PromotionsPage({ onToast }: PromotionsPageProps) {
                             <button className="modal-close" onClick={() => setShowModal(false)} style={{ opacity: 0.5 }}>✕</button>
                         </div>
                         <div className="modal-body" style={{ padding: '24px' }}>
-                            <div className="form-group" style={{ marginBottom: '16px' }}>
-                                <label className="form-label" style={{ marginBottom: '8px', display: 'block', fontSize: '13px', fontWeight: 500 }}>Tiêu đề *</label>
-                                <input className="form-input" placeholder="VD: Khuyến mãi mùa hè 2024" style={{ width: '100%', background: 'rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.05)', color: 'var(--text-primary)' }} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+                            <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                                <div className="form-group">
+                                    <label className="form-label" style={{ marginBottom: '8px', display: 'block', fontSize: '13px', fontWeight: 500 }}>Tiêu đề *</label>
+                                    <input className="form-input" placeholder="VD: Khuyến mãi mùa hè 2024" style={{ width: '100%', background: 'rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.05)', color: 'var(--text-primary)' }} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label" style={{ marginBottom: '8px', display: 'block', fontSize: '13px', fontWeight: 500 }}>Mã Ưu đãi (Voucher) *</label>
+                                    <input className="form-input" placeholder="VD: SUMMER20" style={{ width: '100%', background: 'rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.05)', color: 'var(--text-primary)', fontWeight: 700 }} value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} />
+                                </div>
+                            </div>
+                            <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                                <div className="form-group">
+                                    <label className="form-label" style={{ marginBottom: '8px', display: 'block', fontSize: '13px', fontWeight: 500 }}>Loại giảm giá</label>
+                                    <select className="form-select" style={{ width: '100%', background: 'rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.05)', color: 'var(--text-primary)' }} value={form.discountType} onChange={(e) => setForm({ ...form, discountType: e.target.value })}>
+                                        <option value="PERCENTAGE">Phần trăm (%)</option>
+                                        <option value="FIXED_AMOUNT">Số tiền cố định (đ)</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label" style={{ marginBottom: '8px', display: 'block', fontSize: '13px', fontWeight: 500 }}>Giá trị giảm *</label>
+                                    <input className="form-input" type="number" placeholder="VD: 20 hoặc 50000" style={{ width: '100%', background: 'rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.05)', color: 'var(--text-primary)' }} value={form.discountValue} onChange={(e) => setForm({ ...form, discountValue: e.target.value })} />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label" style={{ marginBottom: '8px', display: 'block', fontSize: '13px', fontWeight: 500 }}>Đơn tối thiểu</label>
+                                    <input className="form-input" type="number" placeholder="0" style={{ width: '100%', background: 'rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.05)', color: 'var(--text-primary)' }} value={form.minOrderValue} onChange={(e) => setForm({ ...form, minOrderValue: e.target.value })} />
+                                </div>
                             </div>
                             <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
                                 <div className="form-group">
