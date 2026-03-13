@@ -2,7 +2,7 @@
  * Lightweight HTTP Client based on Fetch API (Manager)
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://prn-232-be.vercel.app/api/v1';
 
 interface RequestOptions extends RequestInit {
   params?: Record<string, string>;
